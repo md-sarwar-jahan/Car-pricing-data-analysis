@@ -71,8 +71,6 @@ car-data-analysis/
 ├── data/  
 │   └── auto.csv            # Raw dataset  
 ├── clean_df.csv            # Processed data  
-├── car_data_analysis.ipynb # Jupyter Notebook (if used)  
-├── car_data_analysis.py    # Python script  
 └── README.md               # Project documentation  
 
 🎯 Goal: This project showcases my ability to clean, analyze, and derive insights from raw data—essential skills for a Data Analyst role.
