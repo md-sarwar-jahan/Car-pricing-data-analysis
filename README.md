@@ -1,4 +1,4 @@
-Project Overview
+**Project Overview**
 This repository contains a Python script for cleaning and preprocessing a messy dataset of used car attributes, followed by basic exploratory data analysis (EDA). The goal is to transform raw, inconsistent data into a clean, standardized format suitable for further analysis or machine learning models, such as predicting car prices.
 In this project, I demonstrate essential data wrangling skills using Pandas and NumPy, handling common issues like missing values, data type conversions, unit standardization, normalization, binning, and one-hot encoding. This is particularly relevant for real-world data science tasks where datasets are often incomplete or unstructured. By the end, the cleaned data is saved as clean_df.csv, ready for modeling (e.g., regression to predict prices based on features like engine size, horsepower, and fuel efficiency).
 This project showcases my ability to:
