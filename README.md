@@ -1,2 +1,131 @@
 # Car-pricing-data-analysis
 This repository contains a Python-based project for analyzing used car pricing data. The code handles data cleaning (e.g., null/missing values, outliers, and inconsistencies) and performs exploratory data analysis (EDA) to uncover insights into factors influencing car prices, such as mileage, year, make/model, and more.
+import numpy as np
+import pandas as pd
+
+file_path = 'C:/Users/tareq/Desktop/Data Analysis/auto.csv'
+
+df = pd.read_csv(file_path)
+df.head()
+df.tail(10)
+
+headers = ["symboling","normalized-losses","make","fuel-type","aspiration", "num-of-doors","body-style",
+         "drive-wheels","engine-location","wheel-base", "length","width","height","curb-weight","engine-type",
+         "num-of-cylinders", "engine-size","fuel-system","bore","stroke","compression-ratio","horsepower",
+         "peak-rpm","city-mpg","highway-mpg","price"]
+
+df.columns = headers
+df.columns
+
+df1 = df.replace('?', np.nan)
+df = df1.dropna(subset=['price'], axis=0)
+df.head(10)
+df.dtypes
+print(df.dtypes)--(for series)
+df.describe()
+df.describe(include='all')
+df[['length', 'compression-ratio']].describe()
+df.info()
+
+missing_data = df.isnull()
+missing_data.head()
+
+
+#Count missing values in each column
+for column in missing_data.columns.values.tolist():
+    print(column)
+    print(missing_data[column].value_counts())
+    print('')
+
+#Replace with mean
+avg_norm_losses = df['normalized-losses'].astype('float').mean(axis=0)
+print('Average normalized losses: ', avg_norm_losses)
+df["normalized-losses"].replace(np.nan, avg_norm_losses, inplace=True)
+
+avg_bore=df['bore'].astype('float').mean(axis=0)
+print("Average of bore:", avg_bore)
+df["bore"].replace(np.nan, avg_bore, inplace=True)
+
+avg_stroke = df["stroke"].astype('float').mean(axis=0)
+print('Average stroke: ', avg_stroke)
+df["stroke"].replace(np.nan, avg_stroke, inplace=True)
+
+avg_horsepower = df['horsepower'].astype('float').mean(axis=0)
+print("Average horsepower:", avg_horsepower)
+df['horsepower'].replace(np.nan, avg_horsepower, inplace=True)
+
+avg_peakrpm = df['peak-rpm'].astype('float').mean(axis=0)
+print("Average peak rpm:", avg_peakrpm)
+df['peak-rpm'].replace(np.nan, avg_peakrpm, inplace=True)
+
+df['num-of-doors'].value_counts()
+df['num-of-doors'].value_counts().idxmax()
+df['num-of-doors'].replace(np.nan, 'four', inplace=True)
+
+#Drop whole row with null price as it has no value
+df.dropna(subset=['price'], axis=0, inplace=True)
+
+df['highway-mpg'] = 235/df['highway-mpg']
+
+# rename column name from "highway-mpg" to "highway-L/100km"
+
+df.rename(columns={'highway-mpg':'highway-L/100km'}, inplace=True)
+df.head()
+
+#Replace (original value) by (original value) / (maximum value)
+df['length'] = df['length']/df['length'].max()
+df['width'] = df['width']/df['width'].max()
+df['height'] = df['height']/df['height'].max()
+
+#Reset index
+df.reset_index(drop=True, inplace=True)
+df.head()
+
+#Convert km to mpg for data standatdization
+df['city-L/100km'] = 235/df["city-mpg"]
+
+# check your transformed data 
+df.head()
+
+df['horsepower'] = df['horsepower'].astype(int, copy=True)
+bins = np.linspace(min(df['horsepower']), max(df['horsepower']), 4)
+bins
+group_names = ['Low', 'Medium', 'High']
+df['horsepower-binned'] = pd.cut(df['horsepower'], bins, group_names, include_lowest=True)
+df[['horsepower', 'horsepower-binned']].head()
+df['horsepower-binned'].value_counts()
+
+plt.bar(group_names, df['horsepower-binned'].value_counts())
+
+plt.xlabel('horsepower')
+plt.ylabel('count')
+plt.title('horsepower bins')
+
+plt.hist(df['horsepower'], bins=3)
+plt.xlabel("horsepower")
+plt.ylabel("count")
+plt.title("horsepower bins")
+
+
+dummy_variable_1 = pd.get_dummies(df['fuel-type'])
+dummy_variable_1
+
+dummy_variable_1.rename(columns={'diesel':'fuel-type-diesel', 'gas':'fuel-type-gas'}, inplace=True)
+dummy_variable_1.head()
+
+#Merge data with original data
+df = pd.concat([df, dummy_variable_1], axis=1)
+
+#Drop original column Fuel
+df.drop('fuel-type', axis=1, inplace=True)
+
+dummy_variable_2 = pd.get_dummies(df['aspiration'])
+dummy_variable_2.head()
+
+dummy_variable_2.rename(columns={'std': 'aspiration-std', 'turbo':'aspiration-turbo'}, inplace=True)
+df = pd.concat([df, dummy_variable_2], axis=1)
+
+df.drop('aspiration', axis=1, inplace=True)
+df.head()
+
+df.to_csv('clean_df.csv')
