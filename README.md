@@ -10,7 +10,7 @@ Prepare data for downstream tasks like predictive modeling.
 
 It's inspired by common Kaggle datasets (e.g., the classic "Automobile" dataset) and can be extended to build a full used car pricing model.
 Dataset
-The dataset (auto.csv) includes 205 entries with 26 features describing used cars, such as:
+The dataset (auto.csv) includes 26 features describing used cars, such as:
 
 Numerical features: wheel-base, length, width, height, curb-weight, engine-size, bore, stroke, compression-ratio, horsepower, peak-rpm, city-mpg, highway-mpg, price.
 Categorical features: make, fuel-type, aspiration, num-of-doors, body-style, drive-wheels, engine-location, engine-type, num-of-cylinders, fuel-system.
